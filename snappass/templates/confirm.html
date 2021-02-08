@@ -10,14 +10,19 @@
     {% for pwd in password_link %}
     <div class="row">
       <div class="col-sm-6 margin-bottom-10">
-        <input type="text" class="form-control" id="password-link" value="{{ pwd }}" readonly="readonly">
+        <input type="text" class="form-control" id="password-link{{loop.index}}" value="{{ pwd }}" readonly="readonly">
       </div>
 
       <div class="col-sm-6">
         <button title="Copy to clipboard" type="button" class="btn btn-primary copy-clipboard-btn"
-              id="copy-clipboard-btn" data-clipboard-target="#password-link"
+              id="copy-clipboard-btn" data-clipboard-target="#password-link{{loop.index}}"
               data-placement='bottom'>
           <i class="fa fa-clipboard"></i>
+        </button>
+        <button title="Erase clipboard" type="button" class="btn btn-primary copy-clipboard-btn"
+              id="copy-clipboard-btn" data-clipboard-text=" "
+              data-placement='bottom'>
+          <i class="fa fa-trash"></i>
         </button>
       </div>
     </div>
