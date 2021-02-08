@@ -135,7 +135,7 @@ class SnapPassRoutesTestCase(TestCase):
             rv = self.app.post('/', data={'password': password, 'ttl': 'two weeks', 'duplicate': '1'})
 
             html_content = rv.data.decode("ascii")
-            key = re.search(r'id="password-link" value="https?://localhost/([^"]+)', html_content).group(1)
+            key = re.search(r'id="password-link1" value="https?://localhost/([^"]+)', html_content).group(1)
             key = unquote(key)
 
             frozen_time.move_to("2020-05-22 11:59:59")
