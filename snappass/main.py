@@ -13,6 +13,7 @@ from distutils.util import strtobool
 
 NO_SSL = bool(strtobool(os.environ.get('NO_SSL', 'False')))
 URL_PREFIX = os.environ.get('URL_PREFIX', None)
+HOST_OVERRIDE = os.environ.get('HOST_OVERRIDE', None)
 TOKEN_SEPARATOR = '~'
 MAX_DUPLICATE = os.environ.get('MAX_DUPLICATE', 10)
 
@@ -177,9 +178,15 @@ def handle_password():
         token.append(set_password(password, ttl))
 
     if NO_SSL:
-        base_url = request.url_root
+        if HOST_OVERRIDE:
+            base_url = f'http://{HOST_OVERRIDE}/'
+        else:
+            base_url = request.url_root
     else:
-        base_url = request.url_root.replace("http://", "https://")
+        if HOST_OVERRIDE:
+            base_url = f'https://{HOST_OVERRIDE}/'
+        else:
+            base_url = request.url_root.replace("http://", "https://")
     if URL_PREFIX:
         base_url = base_url + URL_PREFIX.strip("/") + "/"
 
