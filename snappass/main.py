@@ -5,7 +5,7 @@ import uuid
 import redis
 
 from cryptography.fernet import Fernet
-from flask import abort, Flask, render_template, request
+from flask import abort, Flask, render_template, request, jsonify
 from redis.exceptions import ConnectionError
 from werkzeug.urls import url_quote_plus
 from werkzeug.urls import url_unquote_plus
@@ -41,6 +41,7 @@ else:
 REDIS_PREFIX = os.environ.get('REDIS_PREFIX', 'snappass')
 
 TIME_CONVERSION = {'two weeks': 1209600, 'week': 604800, 'day': 86400, 'hour': 3600}
+
 
 def check_redis_alive(fn):
     def inner(*args, **kwargs):
@@ -193,14 +194,17 @@ def handle_password():
     for i in range(duplicate):
         link.append(base_url + url_quote_plus(token[i]))
 
-    return render_template('confirm.html', password_link=link)
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        return jsonify(link=link, ttl=ttl)
+    else:
+        return render_template('confirm.html', password_link=link)
 
 
 @app.route('/<password_key>', methods=['GET'])
 def preview_password(password_key):
     password_key = url_unquote_plus(password_key)
     if not password_exists(password_key):
-        abort(404)
+        return render_template('expired.html'), 404
 
     return render_template('preview.html')
 
@@ -210,7 +214,7 @@ def show_password(password_key):
     password_key = url_unquote_plus(password_key)
     password = get_password(password_key)
     if not password:
-        abort(404)
+        return render_template('expired.html'), 404
 
     return render_template('password.html', password=password)
 
