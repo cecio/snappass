@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container">
   <section>
-    <div class="page-header"><h1>Share Secret Link</h1></div>
-    <p>The secret has been temporarily saved. Send the following URL to your intended recipient.</p>
+    <div class="page-header"><h1>{{ _('Share Secret Link') }}</h1></div>
+    <p>{{ _('The secret has been temporarily saved. Send the following URL to your intended recipient.') }}</p>
 
     {# Loop through the password_link #}
     {% for pwd in password_link %}
@@ -14,8 +14,9 @@
       </div>
 
       <div class="col-sm-6">
-        <button title="Copy to clipboard" type="button" class="btn btn-primary copy-clipboard-btn"
+        <button title="{{ _('Copy to clipboard') }}" type="button" class="btn btn-primary copy-clipboard-btn"
               id="copy-clipboard-btn" data-clipboard-target="#password-link{{loop.index}}"
+
               data-placement='bottom'>
           <i class="fa fa-clipboard"></i>
         </button>
